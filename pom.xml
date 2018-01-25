@@ -9,6 +9,6 @@
 
 
 	<modules>
-		<module>../it.devops.demo.prese.build</module>
+		<module>./it.devops.demo.prese.build</module>
 	</modules>
 </project>
