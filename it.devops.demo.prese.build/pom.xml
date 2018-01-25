@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>it.devops.demo.prese</groupId>
+	<artifactId>it.devops.demo.prese.build</artifactId>
+	<version>1.0.21-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>DevOps Demo: build v${version}</name>
+
+
+	<modules>
+		<module>../it.devops.demo.prese.webapp</module>
+		<module>../it.devops.demo.prese.ear</module>
+	</modules>
+	
+	<profiles>
+		<profile>
+			<id>devops</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<ear.module.dir>../it.devops.demo.prese.ear</ear.module.dir>
+				<release.base.dir>${project.build.directory}/_release</release.base.dir>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.4.2</version>
+						<configuration>
+						  <includeEmptyDirs>true</includeEmptyDirs>
+						</configuration>
+						<executions>
+						  <execution>
+							<id>COPY-ENVIRONMENTS</id>
+							<phase>generate-resources</phase>
+							<goals>
+							  <goal>copy-resources</goal>
+							</goals>
+							<configuration>
+							  <outputDirectory>${release.base.dir}/environments-config</outputDirectory>
+							  <resources>
+								<resource>
+								  <directory>${project.basedir}/src/main/resources/env/</directory>
+								</resource>
+							  </resources>
+							</configuration>
+						  </execution>
+						  <execution>
+							<id>COPY-EAR</id>
+							<phase>generate-resources</phase>
+							<goals>
+							  <goal>copy-resources</goal>
+							</goals>
+							<configuration>
+							  <outputDirectory>${release.base.dir}/ear</outputDirectory>
+							  <resources>
+								<resource>
+								  <directory>${ear.module.dir}/target/</directory>
+								  <includes>
+									<include>*.ear</include>
+								  </includes>
+								</resource>
+							  </resources>
+							</configuration>
+						  </execution>          
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

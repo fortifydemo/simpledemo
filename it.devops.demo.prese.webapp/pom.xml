@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>it.devops.demo.prese</groupId>
+	<artifactId>it.devops.demo.prese.webapp</artifactId>
+	<packaging>war</packaging>
+	<version>1.0.21-SNAPSHOT</version>
+	<name>DevOps Demo: war v${version}</name>
+	
+	<parent>
+		<groupId>it.arch</groupId>
+		<artifactId>it.arch.parent</artifactId>
+		<version>1.1</version>
+	</parent>
+
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>groovy-maven-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>ext-war-create-status-page</id>
+						<phase>compile</phase>
+						<goals>
+						  <goal>execute</goal>
+						</goals>
+						<configuration>
+						  <source>
+							<![CDATA[
+								String type = "${project.packaging}";
+								if (!type.equals("war")) return;
+								
+								String fileName = "status.jsp";
+								log.info("Creating "+ fileName +" file...");
+								String targetStr = "${project.build.directory}/${project.artifactId}-${project.version}/pages/";
+								File targetDir = new File(targetStr);
+								if(!targetDir.exists()) targetDir.mkdirs();
+												
+								File versionFile = new File(targetDir, fileName);
+								BufferedWriter writer = new BufferedWriter(new FileWriter(versionFile));
+								writer.write("<html>");
+								writer.write("<body>");
+								writer.write("<h1>Hello DevOps ;-)</h1>");
+								writer.write("<h2>Build Version: ${project.version}</h2>");
+								writer.write("<h2>Build Timestamp: ${maven.build.timestamp}</h2>");
+								writer.write("</body>");
+								writer.write("</html>");
+								writer.close();
+								log.info(fileName + " file success!");
+							]]>
+						  </source>
+						</configuration>
+				  </execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.57</version>
+		</dependency>
+
+	</dependencies>
+</project>
