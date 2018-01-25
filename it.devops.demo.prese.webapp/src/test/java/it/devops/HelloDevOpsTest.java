@@ -1,4 +1,4 @@
-package it.bnl.devops;
+package it.devops;
 
 import static org.junit.Assert.*;
 
